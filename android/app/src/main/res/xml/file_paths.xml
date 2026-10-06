@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Screenshots save karne ke liye -->
+    <external-files-path
+        name="screenshots"
+        path="Screenshots/" />
+
+    <!-- Video clips save karne ke liye -->
+    <external-files-path
+        name="clips"
+        path="Clips/" />
+
+    <!-- Downloaded subtitles -->
+    <external-files-path
+        name="subtitles"
+        path="Subtitles/" />
+
+    <!-- Backup files -->
+    <external-files-path
+        name="backups"
+        path="Backups/" />
+
+    <!-- App internal files (Secure Folder) -->
+    <files-path
+        name="secure_folder"
+        path="secure/" />
+
+    <!-- Cache (thumbnail cache) -->
+    <cache-path
+        name="thumbnails"
+        path="thumbnails/" />
+
+    <!-- External cache -->
+    <external-cache-path
+        name="external_cache"
+        path="." />
+
+</paths>
