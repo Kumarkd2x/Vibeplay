@@ -22,17 +22,12 @@
     <!-- Notifications - Player controls ke liye -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Audio Focus - Headphone nikla toh pause -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-    <!-- Volume Boost ke liye -->
+    <!-- Audio Focus + Volume Boost -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <!-- ==================== FEATURES ==================== -->
 
-    <!-- Touchscreen support -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-    <!-- OpenGL ES 3.0 for smooth rendering -->
     <uses-feature android:glEsVersion="0x00030000" android:required="false" />
 
     <!-- ==================== APPLICATION ==================== -->
@@ -68,7 +63,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Video files ko Vibe Play se open karne ke liye -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -78,7 +72,6 @@
                 <data android:scheme="content" />
             </intent-filter>
 
-            <!-- YouTube links ko Vibe Play se open karne ke liye -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -101,7 +94,7 @@
             </intent-filter>
         </service>
 
-        <!-- ==================== FILE PROVIDER (Screenshots save) ==================== -->
+        <!-- ==================== FILE PROVIDER ==================== -->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -112,8 +105,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <!-- ==================== MEDIA3 SESSION METADATA ==================== -->
 
         <meta-data
             android:name="androidx.media3.session.MediaSessionService"
