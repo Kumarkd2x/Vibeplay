@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ==================== LAYER 1: DARK BACKGROUND ==================== -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0A0A0A" />
+        </shape>
+    </item>
+
+    <!-- ==================== LAYER 2: RED GLOW (TOP) ==================== -->
+    <item
+        android:gravity="top"
+        android:height="400dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#40E50914"
+                android:endColor="#000A0A0A"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- ==================== LAYER 3: RED GLOW (BOTTOM) ==================== -->
+    <item
+        android:gravity="bottom"
+        android:height="300dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#30E50914"
+                android:endColor="#000A0A0A"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- ==================== LAYER 4: CENTER PLAY BUTTON ==================== -->
+    <item
+        android:gravity="center"
+        android:width="140dp"
+        android:height="140dp">
+        <vector
+            android:width="140dp"
+            android:height="140dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <!-- Outer red glow -->
+            <path
+                android:fillColor="#E50914"
+                android:fillAlpha="0.15"
+                android:pathData="M54,54 m-34,0 a34,34 0 1,0 68,0 a34,34 0 1,0 -68,0" />
+            <!-- Main red circle -->
+            <path
+                android:fillColor="#E50914"
+                android:pathData="M54,54 m-28,0 a28,28 0 1,0 56,0 a28,28 0 1,0 -56,0" />
+            <!-- White play triangle -->
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M45,40 L45,68 L70,54 Z" />
+        </vector>
+    </item>
+
+</layer-list>
