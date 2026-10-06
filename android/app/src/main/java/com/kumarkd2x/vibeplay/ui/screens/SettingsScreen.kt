@@ -82,7 +82,9 @@ fun SettingsScreen() {
     var movieMode by remember { mutableStateOf(false) }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().background(Color(0xFF0A0A0A)),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF0A0A0A)),
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
         item {
@@ -105,18 +107,18 @@ fun SettingsScreen() {
             Section("Playback", Icons.Default.PlayCircle) {
                 SwitchItem(Icons.Default.PlayCircle, "Autoplay", "Auto play next video", autoplay) { autoplay = it }
                 SwitchItem(Icons.Default.Memory, "Background Play", "Play with screen off", bgPlay) { bgPlay = it }
-                SwitchItem(Icons.Default.HighQuality, "Picture-in-Picture", "Floating mini player", pip) { pip = it }
+                SwitchItem(Icons.Default.HighQuality, "PiP Mode", "Floating mini player", pip) { pip = it }
                 ClickItem(Icons.Default.Speed, "Default Speed", "1.0x") { }
                 SwitchItem(Icons.Default.Movie, "Movie Mode", "Enhanced dark scenes", movieMode) { movieMode = it }
             }
         }
 
         item {
-            Section("Gestures & Controls", Icons.Default.Gesture) {
-                SwitchItem(Icons.Default.Gesture, "Double Tap to Seek", "10s forward/backward", doubleTap) { doubleTap = it }
+            Section("Gestures", Icons.Default.Gesture) {
+                SwitchItem(Icons.Default.Gesture, "Double Tap Seek", "10s forward/backward", doubleTap) { doubleTap = it }
                 SwitchItem(Icons.Default.Brightness6, "Swipe Gestures", "Brightness, Volume, Seek", swipe) { swipe = it }
                 SwitchItem(Icons.Default.Timer, "Haptic Feedback", "Vibration on tap", haptic) { haptic = it }
-                ClickItem(Icons.Default.Gesture, "Player Layout", "Customize buttons order") { }
+                ClickItem(Icons.Default.Gesture, "Player Layout", "Customize buttons") { }
             }
         }
 
@@ -130,7 +132,7 @@ fun SettingsScreen() {
 
         item {
             Section("Subtitles", Icons.Default.Subtitles) {
-                SwitchItem(Icons.Default.Subtitles, "Auto-Load Subtitles", "Load .srt from folder", autoSub) { autoSub = it }
+                SwitchItem(Icons.Default.Subtitles, "Auto-Load Subs", "Load .srt from folder", autoSub) { autoSub = it }
                 ClickItem(Icons.Default.Translate, "Language", "English") { }
                 ClickItem(Icons.Default.Language, "Subtitle Style", "Font, size, background") { }
             }
@@ -154,7 +156,7 @@ fun SettingsScreen() {
 
         item {
             Section("Advanced", Icons.Default.Memory) {
-                SwitchItem(Icons.Default.Memory, "Hardware Decoder", "Use GPU for smooth playback", hwDecoder) { hwDecoder = it }
+                SwitchItem(Icons.Default.Memory, "HW Decoder", "Use GPU for smooth playback", hwDecoder) { hwDecoder = it }
                 ClickItem(Icons.Default.Speed, "Buffer Size", "Auto") { }
                 ClickItem(Icons.Default.Memory, "Reset Settings", "Restore defaults") { }
             }
@@ -168,8 +170,12 @@ fun SettingsScreen() {
         }
 
         item {
-            Column(modifier = Modifier.fillMaxWidth().padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text("Made with love by Kumarkd2x", color = Color(0xFF6E6E6E), fontSize = 12.sp)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text("Vibe Play - v1.0.0", color = Color(0xFF6E6E6E), fontSize = 11.sp)
@@ -181,30 +187,51 @@ fun SettingsScreen() {
 @Composable
 private fun Section(title: String, icon: ImageVector, content: @Composable () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+        ) {
             Icon(icon, null, tint = VibeRed, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(title, color = VibeRed, fontSize = 13.sp, fontWeight = FontWeight.Bold)
         }
-        Card(modifier = Modifier.fillMaxWidth(),
+        Card(
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = VibeDarkCard)) {
+            colors = CardDefaults.cardColors(containerColor = VibeDarkCard)
+        ) {
             Column { content() }
         }
     }
 }
 
 @Composable
-private fun SwitchItem(icon: ImageVector, title: String, sub: String,
-                       checked: Boolean, onCheck: (Boolean) -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth().clickable { onCheck(!checked) }
-        .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        Box(modifier = Modifier.size(40.dp).clip(CircleShape).background(Color(0xFF252525)),
-            contentAlignment = Alignment.Center) {
-            Icon(icon, null, tint = if (checked) VibeRed else Color(0xFFB0B0B0),
-                modifier = Modifier.size(22.dp))
+private fun SwitchItem(
+    icon: ImageVector,
+    title: String,
+    sub: String,
+    checked: Boolean,
+    onCheck: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheck(!checked) }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF252525)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                icon, null,
+                tint = if (checked) VibeRed else Color(0xFFB0B0B0),
+                modifier = Modifier.size(22.dp)
+            )
         }
         Spacer(modifier = Modifier.width(14.dp))
         Column(modifier = Modifier.weight(1f)) {
@@ -212,24 +239,36 @@ private fun SwitchItem(icon: ImageVector, title: String, sub: String,
             Spacer(modifier = Modifier.height(2.dp))
             Text(sub, color = Color(0xFF8E8E8E), fontSize = 12.sp)
         }
-        Switch(checked = checked, onCheckedChange = onCheck,
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheck,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = VibeRed,
                 uncheckedThumbColor = Color(0xFFB0B0B0),
                 uncheckedTrackColor = Color(0xFF3A3A3A),
                 uncheckedBorderColor = Color.Transparent
-            ))
+            )
+        )
     }
 }
 
 @Composable
 private fun ClickItem(icon: ImageVector, title: String, sub: String, onClick: () -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)
-        .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        Box(modifier = Modifier.size(40.dp).clip(CircleShape).background(Color(0xFF252525)),
-            contentAlignment = Alignment.Center) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF252525)),
+            contentAlignment = Alignment.Center
+        ) {
             Icon(icon, null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(22.dp))
         }
         Spacer(modifier = Modifier.width(14.dp))
@@ -238,7 +277,6 @@ private fun ClickItem(icon: ImageVector, title: String, sub: String, onClick: ()
             Spacer(modifier = Modifier.height(2.dp))
             Text(sub, color = Color(0xFF8E8E8E), fontSize = 12.sp)
         }
-        Icon(Icons.Default.PlayCircle, null, tint = Color(0xFF4E4E4E),
-            modifier = Modifier.size(18.dp))
+        Icon(Icons.Default.PlayCircle, null, tint = Color(0xFF4E4E4E), modifier = Modifier.size(18.dp))
     }
 }
