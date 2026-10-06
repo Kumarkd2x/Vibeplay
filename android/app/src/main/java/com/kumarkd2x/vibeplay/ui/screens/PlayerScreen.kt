@@ -2,7 +2,6 @@ package com.kumarkd2x.vibeplay.ui.screens
 
 import android.app.Activity
 import android.app.PictureInPictureParams
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Build
@@ -34,7 +33,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness6
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Fullscreen
@@ -65,9 +63,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -81,26 +79,6 @@ import androidx.media3.ui.PlayerView
 import com.kumarkd2x.vibeplay.ui.theme.VibeRed
 import kotlinx.coroutines.delay
 
-/**
- * PlayerScreen
- *
- * Vibe Play ka full-featured video player (mpvRx style).
- *
- * Features:
- * - Custom Compose controls overlay
- * - Gesture controls (double tap seek, swipe brightness/volume)
- * - Lock screen
- * - Aspect ratio cycle
- * - Playback speed
- * - Picture-in-Picture
- * - Sleep timer
- * - Screenshot
- * - A-B repeat
- *
- * @param videoUri - Play karne wali video ka URI
- * @param videoTitle - Video ka naam
- * @param onBack - Close karne pe callback
- */
 @Composable
 fun PlayerScreen(
     videoUri: Uri,
@@ -110,7 +88,6 @@ fun PlayerScreen(
     val context = LocalContext.current
     val activity = context as? Activity
 
-    // ==================== PLAYER SETUP ====================
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(MediaItem.fromUri(videoUri))
@@ -119,7 +96,6 @@ fun PlayerScreen(
         }
     }
 
-    // ==================== STATE ====================
     var isPlaying by remember { mutableStateOf(true) }
     var showControls by remember { mutableStateOf(true) }
     var isLocked by remember { mutableStateOf(false) }
@@ -133,7 +109,6 @@ fun PlayerScreen(
     var seekPreviewTime by remember { mutableLongStateOf(0L) }
     var showSeekIndicator by remember { mutableStateOf(false) }
 
-    // ==================== PLAYER LISTENER ====================
     DisposableEffect(exoPlayer) {
         val listener = object : Player.Listener {
             override fun onIsPlayingChanged(playing: Boolean) {
@@ -141,15 +116,12 @@ fun PlayerScreen(
             }
         }
         exoPlayer.addListener(listener)
-
-        // Position updater
         onDispose {
             exoPlayer.removeListener(listener)
             exoPlayer.release()
         }
     }
 
-    // Position loop (every 500ms)
     LaunchedEffect(exoPlayer) {
         while (true) {
             currentPosition = exoPlayer.currentPosition
@@ -158,7 +130,6 @@ fun PlayerScreen(
         }
     }
 
-    // Auto-hide controls after 3s
     LaunchedEffect(showControls, isPlaying) {
         if (showControls && isPlaying && !isLocked) {
             delay(3000)
@@ -166,7 +137,6 @@ fun PlayerScreen(
         }
     }
 
-    // ==================== MAIN UI ====================
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -178,17 +148,14 @@ fun PlayerScreen(
                         onDoubleTap = { offset ->
                             val screenWidth = size.width
                             if (offset.x < screenWidth / 3) {
-                                // Left - rewind 10s
                                 exoPlayer.seekTo((exoPlayer.currentPosition - 10000).coerceAtLeast(0))
                                 seekPreviewTime = exoPlayer.currentPosition
                                 showSeekIndicator = true
                             } else if (offset.x > screenWidth * 2 / 3) {
-                                // Right - forward 10s
                                 exoPlayer.seekTo((exoPlayer.currentPosition + 10000).coerceAtMost(duration))
                                 seekPreviewTime = exoPlayer.currentPosition
                                 showSeekIndicator = true
                             } else {
-                                // Center - play/pause
                                 if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
                             }
                         }
@@ -196,13 +163,11 @@ fun PlayerScreen(
                 }
             }
     ) {
-
-        // ==================== VIDEO VIEW ====================
         AndroidView(
             factory = { ctx ->
                 PlayerView(ctx).apply {
                     player = exoPlayer
-                    useController = false  // Custom controls use karenge
+                    useController = false
                     setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
                 }
             },
@@ -212,22 +177,16 @@ fun PlayerScreen(
                 .align(Alignment.Center)
         )
 
-        // ==================== GESTURE AREA (Brightness/Volume/Seek) ====================
         if (!isLocked) {
             Row(modifier = Modifier.fillMaxSize()) {
-                // LEFT SIDE - Brightness
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
                         .pointerInput(Unit) {
                             detectDragGestures(
-                                onDragStart = {
-                                    showBrightnessIndicator = true
-                                },
-                                onDragEnd = {
-                                    showBrightnessIndicator = false
-                                }
+                                onDragStart = { showBrightnessIndicator = true },
+                                onDragEnd = { showBrightnessIndicator = false }
                             ) { change, dragAmount ->
                                 change.consume()
                                 val delta = -dragAmount.y / size.height
@@ -235,20 +194,14 @@ fun PlayerScreen(
                             }
                         }
                 )
-
-                // RIGHT SIDE - Volume
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
                         .pointerInput(Unit) {
                             detectDragGestures(
-                                onDragStart = {
-                                    showVolumeIndicator = true
-                                },
-                                onDragEnd = {
-                                    showVolumeIndicator = false
-                                }
+                                onDragStart = { showVolumeIndicator = true },
+                                onDragEnd = { showVolumeIndicator = false }
                             ) { change, dragAmount ->
                                 change.consume()
                                 val delta = -dragAmount.y / size.height
@@ -260,7 +213,6 @@ fun PlayerScreen(
             }
         }
 
-        // ==================== BRIGHTNESS INDICATOR ====================
         AnimatedVisibility(
             visible = showBrightnessIndicator,
             enter = fadeIn(),
@@ -273,7 +225,6 @@ fun PlayerScreen(
             )
         }
 
-        // ==================== VOLUME INDICATOR ====================
         AnimatedVisibility(
             visible = showVolumeIndicator,
             enter = fadeIn(),
@@ -286,7 +237,6 @@ fun PlayerScreen(
             )
         }
 
-        // ==================== SEEK INDICATOR ====================
         AnimatedVisibility(
             visible = showSeekIndicator,
             enter = fadeIn(),
@@ -314,7 +264,6 @@ fun PlayerScreen(
             }
         }
 
-        // ==================== TOP BAR ====================
         AnimatedVisibility(
             visible = showControls && !isLocked,
             enter = fadeIn() + slideInVertically { -it },
@@ -324,20 +273,12 @@ fun PlayerScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(Color(0xCC000000), Color.Transparent)
-                        )
-                    )
+                    .background(Brush.verticalGradient(listOf(Color(0xCC000000), Color.Transparent)))
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
+                    Icon(Icons.Default.ArrowBack, "Back", tint = Color.White)
                 }
                 Text(
                     text = videoTitle,
@@ -347,28 +288,15 @@ fun PlayerScreen(
                     maxLines = 1,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = {
-                    // TODO: Subtitle dialog
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Subtitles,
-                        contentDescription = "Subtitles",
-                        tint = Color.White
-                    )
+                IconButton(onClick = { }) {
+                    Icon(Icons.Default.Subtitles, "Subtitles", tint = Color.White)
                 }
-                IconButton(onClick = {
-                    // TODO: Player settings dialog
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.White
-                    )
+                IconButton(onClick = { }) {
+                    Icon(Icons.Default.Settings, "Settings", tint = Color.White)
                 }
             }
         }
 
-        // ==================== CENTER CONTROLS ====================
         AnimatedVisibility(
             visible = showControls && !isLocked,
             enter = fadeIn(),
@@ -379,22 +307,12 @@ fun PlayerScreen(
                 horizontalArrangement = Arrangement.spacedBy(32.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Rewind 10s
                 IconButton(
-                    onClick = {
-                        exoPlayer.seekTo((exoPlayer.currentPosition - 10000).coerceAtLeast(0))
-                    },
+                    onClick = { exoPlayer.seekTo((exoPlayer.currentPosition - 10000).coerceAtLeast(0)) },
                     modifier = Modifier.size(56.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.FastRewind,
-                        contentDescription = "Rewind",
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
-                    )
+                    Icon(Icons.Default.FastRewind, "Rewind", tint = Color.White, modifier = Modifier.size(40.dp))
                 }
-
-                // Play/Pause (big)
                 Box(
                     modifier = Modifier
                         .size(72.dp)
@@ -412,25 +330,15 @@ fun PlayerScreen(
                         modifier = Modifier.size(44.dp)
                     )
                 }
-
-                // Forward 10s
                 IconButton(
-                    onClick = {
-                        exoPlayer.seekTo((exoPlayer.currentPosition + 10000).coerceAtMost(duration))
-                    },
+                    onClick = { exoPlayer.seekTo((exoPlayer.currentPosition + 10000).coerceAtMost(duration)) },
                     modifier = Modifier.size(56.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.FastForward,
-                        contentDescription = "Forward",
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
-                    )
+                    Icon(Icons.Default.FastForward, "Forward", tint = Color.White, modifier = Modifier.size(40.dp))
                 }
             }
         }
 
-        // ==================== BOTTOM CONTROLS ====================
         AnimatedVisibility(
             visible = showControls && !isLocked,
             enter = fadeIn() + slideInVertically { it },
@@ -440,30 +348,15 @@ fun PlayerScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(Color.Transparent, Color(0xCC000000))
-                        )
-                    )
+                    .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xCC000000))))
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                // Seek bar
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = formatTime(currentPosition),
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(formatTime(currentPosition), color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                     Spacer(modifier = Modifier.width(8.dp))
                     Slider(
                         value = if (duration > 0) currentPosition.toFloat() / duration else 0f,
-                        onValueChange = { value ->
-                            val newPos = (value * duration).toLong()
-                            exoPlayer.seekTo(newPos)
-                        },
+                        onValueChange = { value -> exoPlayer.seekTo((value * duration).toLong()) },
                         modifier = Modifier.weight(1f),
                         colors = SliderDefaults.colors(
                             thumbColor = VibeRed,
@@ -472,32 +365,19 @@ fun PlayerScreen(
                         )
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = formatTime(duration),
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Text(formatTime(duration), color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Bottom action row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Lock
                     IconButton(onClick = { isLocked = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Lock",
-                            tint = Color.White
-                        )
+                        Icon(Icons.Default.Lock, "Lock", tint = Color.White)
                     }
-
-                    // Playback Speed
                     IconButton(onClick = {
                         playbackSpeed = when (playbackSpeed) {
                             0.5f -> 0.75f
@@ -507,4 +387,94 @@ fun PlayerScreen(
                             1.5f -> 2f
                             else -> 0.5f
                         }
-  
+                        exoPlayer.setPlaybackSpeed(playbackSpeed)
+                    }) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Default.Speed,
+                                "Speed",
+                                tint = if (playbackSpeed != 1f) VibeRed else Color.White
+                            )
+                            Text(
+                                text = "${playbackSpeed}x",
+                                color = if (playbackSpeed != 1f) VibeRed else Color.White,
+                                fontSize = 9.sp
+                            )
+                        }
+                    }
+                    IconButton(onClick = {
+                        activity?.requestedOrientation =
+                            if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    }) {
+                        Icon(Icons.Default.ScreenRotation, "Rotate", tint = Color.White)
+                    }
+                    IconButton(onClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val params = PictureInPictureParams.Builder()
+                                .setAspectRatio(Rational(16, 9))
+                                .build()
+                            activity?.enterPictureInPictureMode(params)
+                        }
+                    }) {
+                        Icon(Icons.Default.PictureInPictureAlt, "PiP", tint = Color.White)
+                    }
+                    IconButton(onClick = {
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    }) {
+                        Icon(Icons.Default.Fullscreen, "Fullscreen", tint = Color.White)
+                    }
+                }
+            }
+        }
+
+        if (isLocked) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(24.dp)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color(0x80000000))
+                    .clickable { isLocked = false },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.LockOpen, "Unlock", tint = Color.White, modifier = Modifier.size(24.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun GestureIndicator(
+    icon: ImageVector,
+    label: String
+) {
+    Box(
+        modifier = Modifier
+            .padding(24.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xCC000000))
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(28.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(label, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+private fun formatTime(millis: Long): String {
+    if (millis <= 0) return "00:00"
+    val totalSeconds = millis / 1000
+    val hours = totalSeconds / 3600
+    val minutes = (totalSeconds % 3600) / 60
+    val seconds = totalSeconds % 60
+    return if (hours > 0) {
+        String.format("%d:%02d:%02d", hours, minutes, seconds)
+    } else {
+        String.format("%02d:%02d", minutes, seconds)
+    }
+}
