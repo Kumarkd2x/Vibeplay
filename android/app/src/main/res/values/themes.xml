@@ -3,50 +3,35 @@
 
     <!-- ==================== MAIN APP THEME ==================== -->
     <style name="Theme.VibePlay" parent="android:Theme.Material.NoActionBar">
-        <!-- Status Bar (top) -->
         <item name="android:statusBarColor">@color/vibe_black</item>
         <item name="android:windowLightStatusBar">false</item>
-
-        <!-- Navigation Bar (bottom) -->
         <item name="android:navigationBarColor">@color/vibe_black</item>
         <item name="android:windowLightNavigationBar">false</item>
-
-        <!-- Window Background -->
         <item name="android:windowBackground">@color/vibe_black</item>
-
-        <!-- Text Colors -->
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
         <item name="android:textColorHint">@color/text_tertiary_dark</item>
-
-        <!-- Accent Color (Red) -->
         <item name="android:colorAccent">@color/vibe_red</item>
         <item name="android:colorPrimary">@color/vibe_red</item>
         <item name="android:colorPrimaryDark">@color/vibe_red_dark</item>
         <item name="android:colorControlActivated">@color/vibe_red</item>
         <item name="android:colorControlHighlight">@color/vibe_red_light</item>
-
-        <!-- Window Features -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
-
-        <!-- Hardware Acceleration -->
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
-
-        <!-- Cutout / Notch Support -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
     </style>
 
-    <!-- ==================== SPLASH SCREEN THEME ==================== -->
+    <!-- SPLASH SCREEN THEME -->
     <style name="Theme.VibePlay.Splash" parent="Theme.VibePlay">
         <item name="android:windowBackground">@drawable/splash_background</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <!-- ==================== PLAYER FULLSCREEN THEME ==================== -->
+    <!-- PLAYER FULLSCREEN THEME -->
     <style name="Theme.VibePlay.Player" parent="Theme.VibePlay">
         <item name="android:windowBackground">@color/player_background</item>
         <item name="android:statusBarColor">@color/transparent</item>
@@ -57,7 +42,7 @@
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
     </style>
 
-    <!-- ==================== DIALOG THEME ==================== -->
+    <!-- DIALOG THEME -->
     <style name="Theme.VibePlay.Dialog" parent="android:Theme.Material.Dialog.Alert">
         <item name="android:colorAccent">@color/vibe_red</item>
         <item name="android:colorPrimary">@color/vibe_red</item>
@@ -66,7 +51,7 @@
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
     </style>
 
-    <!-- ==================== BOTTOM SHEET THEME ==================== -->
+    <!-- BOTTOM SHEET THEME -->
     <style name="Theme.VibePlay.BottomSheet" parent="Theme.VibePlay">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@color/transparent</item>
