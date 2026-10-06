@@ -24,9 +24,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.7
+          cache-disabled: true
 
       - name: Generate Keystore
         run: |
@@ -58,9 +58,9 @@ jobs:
           files: android/app/build/outputs/apk/release/*.apk
           name: Vibe Play ${{ github.ref_name }}
           body: |
-            Vibe Play ${{ github.ref_name }} - Play Your Vibe
+            🎬 **Vibe Play ${{ github.ref_name }}** — Play Your Vibe
             
-            Features:
+            **✨ Features:**
             - Native YouTube UI (No Ads)
             - Local Offline Player (ExoPlayer, 4K Support)
             - mpvRx-Style Advanced Controls
@@ -70,11 +70,13 @@ jobs:
             - Secure Folder, A-B Repeat, Screenshot
             - Sponsors Auto-Skip (SponsorBlock)
             
-            APKs:
-            - app-arm64-v8a-release.apk - Modern Phones (99%)
-            - app-armeabi-v7a-release.apk - Older Phones
-            - app-x86-release.apk - Emulators (32-bit)
-            - app-x86_64-release.apk - Emulators (64-bit)
-            - app-universal-release.apk - Works on ALL devices
+            **📦 APKs (Choose as per your device):**
+            - `app-arm64-v8a-release.apk` → Modern Phones (99%)
+            - `app-armeabi-v7a-release.apk` → Older Phones
+            - `app-x86-release.apk` → Emulators (32-bit)
+            - `app-x86_64-release.apk` → Emulators (64-bit)
+            - `app-universal-release.apk` → Works on ALL devices
+            
+            **Happy Vibing! 🎧**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
