@@ -2,7 +2,6 @@ package com.kumarkd2x.vibeplay.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -61,23 +60,8 @@ import androidx.compose.ui.unit.sp
 import com.kumarkd2x.vibeplay.ui.theme.VibeDarkCard
 import com.kumarkd2x.vibeplay.ui.theme.VibeRed
 
-/**
- * SettingsScreen
- *
- * mpvRx-style feature-packed settings. Sections:
- * 1. Appearance (Dark Mode, Material You, Accent Color)
- * 2. Playback (Autoplay, Background Play, Speed, PiP)
- * 3. Gestures & Controls (Double tap, Swipe)
- * 4. Audio (Dialogue Boost, Volume Boost, Audio Focus)
- * 5. Subtitles (Language, Font, Size)
- * 6. Storage (Secure Folder, Folder Blacklist, Cache)
- * 7. Network (Proxy, Vibe Mode, Quality)
- * 8. Advanced (Decoder, Buffer, Performance)
- * 9. About (Version, Credits)
- */
 @Composable
 fun SettingsScreen() {
-    // ==================== STATE (Demo) ====================
     var darkTheme by remember { mutableStateOf(true) }
     var materialYou by remember { mutableStateOf(false) }
     var autoplay by remember { mutableStateOf(true) }
@@ -103,30 +87,16 @@ fun SettingsScreen() {
             .background(Color(0xFF0A0A0A)),
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
-        // ==================== HEADER ====================
         item {
             Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = "Settings",
-                    color = Color.White,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Text("Settings", color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Customize Vibe Play your way",
-                    color = Color(0xFFB0B0B0),
-                    fontSize = 13.sp
-                )
+                Text("Customize Vibe Play your way", color = Color(0xFFB0B0B0), fontSize = 13.sp)
             }
         }
 
-        // ==================== APPEARANCE ====================
         item {
-            SettingsSection(
-                title = "Appearance",
-                icon = Icons.Default.Palette
-            ) {
+            SettingsSection(title = "Appearance", icon = Icons.Default.Palette) {
                 SettingsSwitchItem(
                     icon = Icons.Default.DarkMode,
                     title = "Dark Theme",
@@ -145,17 +115,13 @@ fun SettingsScreen() {
                     icon = Icons.Default.Brightness6,
                     title = "Accent Color",
                     subtitle = "Current: Vibe Red",
-                    onClick = { /* Accent color dialog */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== PLAYBACK ====================
         item {
-            SettingsSection(
-                title = "Playback",
-                icon = Icons.Default.PlayCircle
-            ) {
+            SettingsSection(title = "Playback", icon = Icons.Default.PlayCircle) {
                 SettingsSwitchItem(
                     icon = Icons.Default.PlayCircle,
                     title = "Autoplay",
@@ -181,7 +147,7 @@ fun SettingsScreen() {
                     icon = Icons.Default.Speed,
                     title = "Default Playback Speed",
                     subtitle = "1.0x",
-                    onClick = { /* Speed dialog */ }
+                    onClick = { }
                 )
                 SettingsSwitchItem(
                     icon = Icons.Default.Movie,
@@ -193,12 +159,8 @@ fun SettingsScreen() {
             }
         }
 
-        // ==================== GESTURES & CONTROLS ====================
         item {
-            SettingsSection(
-                title = "Gestures & Controls",
-                icon = Icons.Default.Gesture
-            ) {
+            SettingsSection(title = "Gestures & Controls", icon = Icons.Default.Gesture) {
                 SettingsSwitchItem(
                     icon = Icons.Default.Gesture,
                     title = "Double Tap to Seek",
@@ -224,17 +186,13 @@ fun SettingsScreen() {
                     icon = Icons.Default.Gesture,
                     title = "Player Layout",
                     subtitle = "Customize buttons order",
-                    onClick = { /* Layout editor */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== AUDIO ====================
         item {
-            SettingsSection(
-                title = "Audio",
-                icon = Icons.Default.GraphicEq
-            ) {
+            SettingsSection(title = "Audio", icon = Icons.Default.GraphicEq) {
                 SettingsSwitchItem(
                     icon = Icons.Default.VolumeUp,
                     title = "Dialogue Boost",
@@ -259,12 +217,8 @@ fun SettingsScreen() {
             }
         }
 
-        // ==================== SUBTITLES ====================
         item {
-            SettingsSection(
-                title = "Subtitles",
-                icon = Icons.Default.Subtitles
-            ) {
+            SettingsSection(title = "Subtitles", icon = Icons.Default.Subtitles) {
                 SettingsSwitchItem(
                     icon = Icons.Default.Subtitles,
                     title = "Auto-Load Subtitles",
@@ -276,23 +230,19 @@ fun SettingsScreen() {
                     icon = Icons.Default.Translate,
                     title = "Preferred Language",
                     subtitle = "English",
-                    onClick = { /* Language dialog */ }
+                    onClick = { }
                 )
                 SettingsClickableItem(
                     icon = Icons.Default.Language,
                     title = "Subtitle Style",
                     subtitle = "Font, size, background",
-                    onClick = { /* Style dialog */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== STORAGE ====================
         item {
-            SettingsSection(
-                title = "Storage",
-                icon = Icons.Default.Folder
-            ) {
+            SettingsSection(title = "Storage", icon = Icons.Default.Folder) {
                 SettingsSwitchItem(
                     icon = Icons.Default.Lock,
                     title = "Secure Folder",
@@ -311,17 +261,13 @@ fun SettingsScreen() {
                     icon = Icons.Default.Folder,
                     title = "Clear Cache",
                     subtitle = "Free up storage space",
-                    onClick = { /* Clear cache */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== NETWORK ====================
         item {
-            SettingsSection(
-                title = "Network",
-                icon = Icons.Default.NetworkCheck
-            ) {
+            SettingsSection(title = "Network", icon = Icons.Default.NetworkCheck) {
                 SettingsSwitchItem(
                     icon = Icons.Default.Speed,
                     title = "Vibe Mode",
@@ -340,17 +286,13 @@ fun SettingsScreen() {
                     icon = Icons.Default.HighQuality,
                     title = "Default Quality",
                     subtitle = "Auto (up to 4K)",
-                    onClick = { /* Quality dialog */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== ADVANCED ====================
         item {
-            SettingsSection(
-                title = "Advanced",
-                icon = Icons.Default.Memory
-            ) {
+            SettingsSection(title = "Advanced", icon = Icons.Default.Memory) {
                 SettingsSwitchItem(
                     icon = Icons.Default.Memory,
                     title = "Hardware Decoder",
@@ -362,39 +304,34 @@ fun SettingsScreen() {
                     icon = Icons.Default.Speed,
                     title = "Buffer Size",
                     subtitle = "Auto (based on RAM)",
-                    onClick = { /* Buffer dialog */ }
+                    onClick = { }
                 )
                 SettingsClickableItem(
                     icon = Icons.Default.Memory,
                     title = "Reset Settings",
                     subtitle = "Restore defaults",
-                    onClick = { /* Reset */ }
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== ABOUT ====================
         item {
-            SettingsSection(
-                title = "About",
-                icon = Icons.Default.Info
-            ) {
+            SettingsSection(title = "About", icon = Icons.Default.Info) {
                 SettingsClickableItem(
                     icon = Icons.Default.Info,
                     title = "Version",
                     subtitle = "1.0.0 (Build 1)",
-                    onClick = { /* Version info */ }
+                    onClick = { }
                 )
                 SettingsClickableItem(
                     icon = Icons.Default.Info,
                     title = "Vibe Play",
-                    subtitle = "Play Your Vibe 🎬",
-                    onClick = { /* About dialog */ }
+                    subtitle = "Play Your Vibe",
+                    onClick = { }
                 )
             }
         }
 
-        // ==================== FOOTER ====================
         item {
             Column(
                 modifier = Modifier
@@ -402,23 +339,14 @@ fun SettingsScreen() {
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Made with ❤️ by Kumarkd2x",
-                    color = Color(0xFF6E6E6E),
-                    fontSize = 12.sp
-                )
+                Text("Made with love by Kumarkd2x", color = Color(0xFF6E6E6E), fontSize = 12.sp)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Vibe Play • v1.0.0",
-                    color = Color(0xFF6E6E6E),
-                    fontSize = 11.sp
-                )
+                Text("Vibe Play - v1.0.0", color = Color(0xFF6E6E6E), fontSize = 11.sp)
             }
         }
     }
 }
 
-// ==================== SECTION WRAPPER ====================
 @Composable
 private fun SettingsSection(
     title: String,
@@ -430,17 +358,11 @@ private fun SettingsSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Section header
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = VibeRed,
-                modifier = Modifier.size(18.dp)
-            )
+            Icon(icon, contentDescription = null, tint = VibeRed, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = title,
@@ -450,21 +372,16 @@ private fun SettingsSection(
                 letterSpacing = 0.5.sp
             )
         }
-
-        // Section card
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = VibeDarkCard)
         ) {
-            Column {
-                content()
-            }
+            Column { content() }
         }
     }
 }
 
-// ==================== SWITCH ITEM ====================
 @Composable
 private fun SettingsSwitchItem(
     icon: ImageVector,
@@ -480,7 +397,6 @@ private fun SettingsSwitchItem(
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Icon circle
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -495,26 +411,12 @@ private fun SettingsSwitchItem(
                 modifier = Modifier.size(22.dp)
             )
         }
-
         Spacer(modifier = Modifier.width(14.dp))
-
-        // Title + Subtitle
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Medium)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = subtitle,
-                color = Color(0xFF8E8E8E),
-                fontSize = 12.sp
-            )
+            Text(subtitle, color = Color(0xFF8E8E8E), fontSize = 12.sp)
         }
-
-        // Switch
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -529,8 +431,45 @@ private fun SettingsSwitchItem(
     }
 }
 
-// ==================== CLICKABLE ITEM ====================
 @Composable
 private fun SettingsClickableItem(
     icon: ImageVector,
     title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF252525)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = Color(0xFFB0B0B0),
+                modifier = Modifier.size(22.dp)
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(subtitle, color = Color(0xFF8E8E8E), fontSize = 12.sp)
+        }
+        Icon(
+            imageVector = Icons.Default.PlayCircle,
+            contentDescription = null,
+            tint = Color(0xFF4E4E4E),
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
