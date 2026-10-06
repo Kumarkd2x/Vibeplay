@@ -1,0 +1,80 @@
+name: Build Vibe Play APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: 8.7
+
+      - name: Generate Keystore
+        run: |
+          cd android
+          keytool -genkey -v -keystore my-release-key.jks \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -alias vibe-key -storepass vibepass123 -keypass vibepass123 \
+            -dname "CN=Kumarkd2x, OU=VibePlay, O=VibePlay, L=Delhi, S=Delhi, C=IN"
+
+      - name: Build Release APKs
+        run: |
+          cd android
+          gradle wrapper --gradle-version 8.7
+          ./gradlew clean assembleRelease --stacktrace
+
+      - name: List Generated APKs
+        run: ls -lh android/app/build/outputs/apk/release/
+
+      - name: Upload APKs as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vibe-play-apks
+          path: android/app/build/outputs/apk/release/*.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: android/app/build/outputs/apk/release/*.apk
+          name: Vibe Play ${{ github.ref_name }}
+          body: |
+            Vibe Play ${{ github.ref_name }} - Play Your Vibe
+            
+            Features:
+            - Native YouTube UI (No Ads)
+            - Local Offline Player (ExoPlayer, 4K Support)
+            - mpvRx-Style Advanced Controls
+            - Gesture Controls (Brightness, Volume, Seek, Zoom)
+            - PiP, Sleep Timer, Background Play
+            - Material 3 Dark Theme with Red Accent
+            - Secure Folder, A-B Repeat, Screenshot
+            - Sponsors Auto-Skip (SponsorBlock)
+            
+            APKs:
+            - app-arm64-v8a-release.apk - Modern Phones (99%)
+            - app-armeabi-v7a-release.apk - Older Phones
+            - app-x86-release.apk - Emulators (32-bit)
+            - app-x86_64-release.apk - Emulators (64-bit)
+            - app-universal-release.apk - Works on ALL devices
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
