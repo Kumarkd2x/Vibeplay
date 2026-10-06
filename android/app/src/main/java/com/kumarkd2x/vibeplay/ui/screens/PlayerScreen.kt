@@ -9,8 +9,6 @@ import android.util.Rational
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -61,7 +59,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -90,13 +87,9 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
     var isPlaying by remember { mutableStateOf(true) }
     var showControls by remember { mutableStateOf(true) }
     var isLocked by remember { mutableStateOf(false) }
-    var currentPosition by remember { mutableLongStateOf(0L) }
+    var currentPos by remember { mutableLongStateOf(0L) }
     var duration by remember { mutableLongStateOf(0L) }
     var playbackSpeed by remember { mutableFloatStateOf(1f) }
-    var brightness by remember { mutableFloatStateOf(0.5f) }
-    var volume by remember { mutableFloatStateOf(0.5f) }
-    var showBrightness by remember { mutableStateOf(false) }
-    var showVolume by remember { mutableStateOf(false) }
 
     DisposableEffect(exoPlayer) {
         val listener = object : Player.Listener {
@@ -111,7 +104,7 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
 
     LaunchedEffect(exoPlayer) {
         while (true) {
-            currentPosition = exoPlayer.currentPosition
+            currentPos = exoPlayer.currentPosition
             duration = exoPlayer.duration.coerceAtLeast(0L)
             delay(500)
         }
@@ -125,7 +118,9 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
             .pointerInput(isLocked) {
                 if (!isLocked) {
                     detectTapGestures(
@@ -151,68 +146,36 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                     useController = false
                 }
             },
-            modifier = Modifier.fillMaxSize().aspectRatio(16f / 9f).align(Alignment.Center)
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(16f / 9f)
+                .align(Alignment.Center)
         )
-
-        if (!isLocked) {
-            Row(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.weight(1f).fillMaxHeight()
-                    .pointerInput(Unit) {
-                        detectDragGestures(
-                            onDragStart = { showBrightness = true },
-                            onDragEnd = { showBrightness = false }
-                        ) { change, drag ->
-                            change.consume()
-                            brightness = (brightness - drag.y / size.height).coerceIn(0f, 1f)
-                        }
-                    })
-                Box(modifier = Modifier.weight(1f).fillMaxHeight()
-                    .pointerInput(Unit) {
-                        detectDragGestures(
-                            onDragStart = { showVolume = true },
-                            onDragEnd = { showVolume = false }
-                        ) { change, drag ->
-                            change.consume()
-                            volume = (volume - drag.y / size.height).coerceIn(0f, 1f)
-                            exoPlayer.volume = volume
-                        }
-                    })
-            }
-        }
-
-        if (showBrightness) {
-            GestureIndicator(
-                icon = Icons.Default.Brightness6,
-                label = "${(brightness * 100).toInt()}%",
-                modifier = Modifier.align(Alignment.CenterStart)
-            )
-        }
-        if (showVolume) {
-            GestureIndicator(
-                icon = Icons.Default.VolumeUp,
-                label = "${(volume * 100).toInt()}%",
-                modifier = Modifier.align(Alignment.CenterEnd)
-            )
-        }
 
         AnimatedVisibility(
             visible = showControls && !isLocked,
-            enter = fadeIn() + slideInVertically { -it },
-            exit = fadeOut() + slideOutVertically { -it },
+            enter = fadeIn(),
+            exit = fadeOut(),
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth()
-                    .background(Brush.verticalGradient(listOf(Color(0xCC000000), Color.Transparent)))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xCC000000))
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Default.ArrowBack, "Back", tint = Color.White)
                 }
-                Text(videoTitle, color = Color.White, fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold, maxLines = 1,
-                    modifier = Modifier.weight(1f))
+                Text(
+                    videoTitle,
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
 
@@ -222,8 +185,10 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.Center)
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(32.dp),
-                verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(32.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 IconButton(
                     onClick = { exoPlayer.seekTo((exoPlayer.currentPosition - 10000).coerceAtLeast(0)) },
                     modifier = Modifier.size(56.dp)
@@ -231,7 +196,10 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                     Icon(Icons.Default.FastRewind, "Rewind", tint = Color.White, modifier = Modifier.size(40.dp))
                 }
                 Box(
-                    modifier = Modifier.size(72.dp).clip(CircleShape).background(Color(0xCC000000))
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xCC000000))
                         .clickable {
                             if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
                         },
@@ -255,20 +223,21 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
 
         AnimatedVisibility(
             visible = showControls && !isLocked,
-            enter = fadeIn() + slideInVertically { it },
-            exit = fadeOut() + slideOutVertically { it },
+            enter = fadeIn(),
+            exit = fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
-                    .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xCC000000))))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xCC000000))
                     .padding(12.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(formatTime(currentPosition), color = Color.White, fontSize = 12.sp)
+                    Text(formatTime(currentPos), color = Color.White, fontSize = 12.sp)
                     Spacer(modifier = Modifier.width(8.dp))
                     Slider(
-                        value = if (duration > 0) currentPosition.toFloat() / duration else 0f,
+                        value = if (duration > 0) currentPos.toFloat() / duration else 0f,
                         onValueChange = { v -> exoPlayer.seekTo((v * duration).toLong()) },
                         modifier = Modifier.weight(1f),
                         colors = SliderDefaults.colors(
@@ -281,9 +250,11 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                     Text(formatTime(duration), color = Color.White, fontSize = 12.sp)
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(onClick = { isLocked = true }) {
                         Icon(Icons.Default.Lock, "Lock", tint = Color.White)
                     }
@@ -299,11 +270,16 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                         exoPlayer.setPlaybackSpeed(playbackSpeed)
                     }) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.Speed, "Speed",
-                                tint = if (playbackSpeed != 1f) VibeRed else Color.White)
-                            Text("${playbackSpeed}x",
+                            Icon(
+                                Icons.Default.Speed,
+                                "Speed",
+                                tint = if (playbackSpeed != 1f) VibeRed else Color.White
+                            )
+                            Text(
+                                "${playbackSpeed}x",
                                 color = if (playbackSpeed != 1f) VibeRed else Color.White,
-                                fontSize = 9.sp)
+                                fontSize = 9.sp
+                            )
                         }
                     }
                     IconButton(onClick = {
@@ -317,7 +293,8 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                     IconButton(onClick = {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             val params = PictureInPictureParams.Builder()
-                                .setAspectRatio(Rational(16, 9)).build()
+                                .setAspectRatio(Rational(16, 9))
+                                .build()
                             activity?.enterPictureInPictureMode(params)
                         }
                     }) {
@@ -334,31 +311,17 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
 
         if (isLocked) {
             Box(
-                modifier = Modifier.align(Alignment.CenterStart).padding(24.dp)
-                    .size(48.dp).clip(CircleShape).background(Color(0x80000000))
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(24.dp)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color(0x80000000))
                     .clickable { isLocked = false },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Default.LockOpen, "Unlock", tint = Color.White, modifier = Modifier.size(24.dp))
             }
-        }
-    }
-}
-
-@Composable
-private fun GestureIndicator(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier.padding(24.dp).clip(RoundedCornerShape(12.dp))
-            .background(Color(0xCC000000)).padding(16.dp)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, null, tint = Color.White, modifier = Modifier.size(28.dp))
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(label, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
