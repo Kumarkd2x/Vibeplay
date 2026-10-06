@@ -278,8 +278,9 @@ fun PlayerScreen(videoUri: Uri, videoTitle: String = "Video", onBack: () -> Unit
                         }
                     }
                     IconButton(onClick = {
-                        activity?.requestedOrientation =
-                            if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                        val act = activity ?: return@IconButton
+                        act.requestedOrientation =
+                            if (act.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                             else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                     }) {
